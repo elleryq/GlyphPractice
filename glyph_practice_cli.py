@@ -14,7 +14,6 @@ Dependencies:
 
 @author: Yan-ren Tsai <elleryq (at) gmail (dot) com>
 """
-from __future__ import print_function, unicode_literals
 import sys
 import os
 import codecs
@@ -29,6 +28,14 @@ group_adjacent = lambda a, k: zip(*([iter(a)] * k))
 URL = "http://eword.ntpc.edu.tw/export.asp"
 chunk_size = 4096
 MAX_E_WORD = 30
+
+
+def which(cmd):
+    for p in os.environ["PATH"].split(os.pathsep):
+        fullpath = os.path.join(p, cmd)
+        if os.path.exists(fullpath):
+            return fullpath
+    return None
 
 
 def get_practice_paper(s, output="practice1.doc"):
@@ -72,10 +79,16 @@ def pdfjoin(pdfs, output):
 
 
 def generate(fn):
+    if not which("wkhtmltopdf"):
+        raise Exception("Need 'wkhtmltopdf': apt-get install wkhtmltopdf")
+    if not which("pdftk"):
+        raise Exception("Need 'pdftk': apt-get install pdftk")
+
     if fn.endswith(".txt"):
         pdf_fn = fn.replace(".txt", ".pdf")
     else:
         pdf_fn = "{0}.pdf".format(fn)
+
     count = 1
     pdfs = []
     with codecs.open(fn, encoding="utf-8") as f:
@@ -92,9 +105,11 @@ def generate(fn):
             pdfs.append(html2pdf(html))
             os.remove(html)
             count = count + 1
+
     pdf_output = pdfjoin(pdfs, pdf_fn)
     for pdf in pdfs:
         os.remove(pdf)
+
     return pdf_output
 
 
