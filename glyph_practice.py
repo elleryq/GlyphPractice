@@ -11,7 +11,7 @@ from tkinter.filedialog import askopenfilename
 from tkinter.messagebox import showerror, askyesno
 from tkinter.scrolledtext import ScrolledText
 
-from glyph_practice_lib import generate
+from glyph_practice_cli import generate
 
 
 class MyFrame(Frame):
