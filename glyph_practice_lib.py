@@ -55,7 +55,7 @@ def pdfjoin(pdfs, output):
 
     inputs = []
     cats = []
-    for i, pdf in enumerate(pdfs):
+    for i, pdf in enumerate(pdfs[:26]):
         _id = chr(65 + i)
         inputs.append("{_id}={fn}".format(
             _id=_id,
@@ -71,13 +71,11 @@ def pdfjoin(pdfs, output):
     return output
 
 
-def main():
-    if len(sys.argv) == 1:
-        fn = raw_input('Please input filename:')
-        print(fn)
+def generate(fn):
+    if fn.endswith(".txt"):
+        pdf_fn = fn.replace(".txt", ".pdf")
     else:
-        fn = sys.argv[1]
-    print(fn)
+        pdf_fn = "{0}.pdf".format(fn)
     count = 1
     pdfs = []
     with codecs.open(fn, encoding="utf-8") as f:
@@ -85,19 +83,25 @@ def main():
             [line.strip().replace(' ', '') for line in f]))
         reminder = len(chars) % MAX_E_WORD
         if reminder:
-            chars.extend(list(u' '*(MAX_E_WORD-reminder)))
+            chars.extend(list(' '*(MAX_E_WORD-reminder)))
         grouped_chars = group_adjacent(chars, MAX_E_WORD)
         for g in grouped_chars:
-            s = u''.join(g)
+            s = ''.join(g)
             html = "{0}.html".format(count)
             get_practice_paper(s, html)
             pdfs.append(html2pdf(html))
             os.remove(html)
             count = count + 1
-    output = pdfjoin(pdfs, u"all.pdf")
-    map(lambda x: os.remove(x), pdfs)
-    print("finished. already output to {0}".format(output))
+    pdf_output = pdfjoin(pdfs, pdf_fn)
+    for pdf in pdfs:
+        os.remove(pdf)
+    return pdf_output
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) == 1:
+        fn = raw_input('Please input filename:')
+        print(fn)
+    else:
+        fn = sys.argv[1]
+    generate(fn)
