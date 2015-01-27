@@ -11,10 +11,10 @@ from tkinter.filedialog import askopenfilename
 from tkinter.messagebox import showerror, askyesno
 from tkinter.scrolledtext import ScrolledText
 
-from glyph_practice_cli import generate
+from glyphpractice.cli import generate
 
 
-class MyFrame(Frame):
+class GPFrame(Frame):
     def __init__(self):
         Frame.__init__(self)
         self.master.title("Glyph practice book generator")
@@ -103,4 +103,4 @@ class MyFrame(Frame):
 
 
 if __name__ == "__main__":
-    MyFrame().mainloop()
+    GPFrame().mainloop()

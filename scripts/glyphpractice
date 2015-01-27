@@ -1,0 +1,5 @@
+#!/usr/bin/env python3
+from glyphpractice.gui import GPFrame
+
+if __name__ == "__main__":
+    GPFrame().mainloop()
